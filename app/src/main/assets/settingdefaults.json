@@ -138,7 +138,7 @@
   { "name": "zone.language.iso", "description": "Language ISO3 ID", "defaultValue": "IS" },
   { "name": "zone.language.tag", "description": "Language Tag (is-IS)", "defaultValue": "is-IS" },
   { "name": "zone.region", "description": "Region Specification Code (IS/CN...)", "defaultValue": "IS" },
-  { "name": "zone.timezone", "description": "TimeZone like a number thingy", "defaultValue": "GMT+0" },
+  { "name": "zone.timezone", "description": "TimeZone Offset like GMT-XXX", "defaultValue": "GMT+0" },
   { "name": "zone.timezone.display.name", "description": "TimeZone Display Name (Greenwich Mean Time)", "defaultValue": "Greenwich Mean Time" },
 
 
@@ -234,7 +234,10 @@
   { "name": "clipboard.contents", "description": "Data that the Clipboard is Holding", "defaultValue": "error" },
 
 
-  { "name": "applications.allow.list", "description": "List of Applications allowed through the filter", "defaultValue": "*" },
+  { "name": "applications.allow.list", "description": "List of Applications allowed through the filter example (cool.app,new.app,someother.app.name,amazon)", "defaultValue": "*" },
+  { "name": "applications.block.list", "description": "List of Applications blocked through the filter example (cool.app,new.app,someother.app.name,amazon)", "defaultValue": "*" },
+  { "name": "applications.blacklist.mode.bool", "description": "", "defaultValue": "false" },
+
 
 
   { "name": "location.latitude", "description": "Latitude GPS", "defaultValue": "0.0000" },
@@ -245,6 +248,9 @@
   { "name": "location.provider", "description": "Provider name, not important like carrier name", "defaultValue": "privacy" },
 
   { "name": "notification.message", "description": "Notification Message", "defaultValue": "private" },
+
+
+  { "name": "analytics.firebase.instance.id", "description": "Firebase Instance ID", "defaultValue": "4320c07b-5de1-4fd8-8668-3889e9d18be7" },
 
 
   //User Default Values

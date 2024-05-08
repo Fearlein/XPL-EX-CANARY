@@ -40,6 +40,7 @@ import eu.faircode.xlua.logger.XLog;
 import eu.faircode.xlua.random.IRandomizer;
 import eu.faircode.xlua.random.GlobalRandoms;
 import eu.faircode.xlua.random.randomizers.NARandomizer;
+import eu.faircode.xlua.ui.ViewFloatingAction;
 import eu.faircode.xlua.ui.dialogs.NoRandomDialog;
 import eu.faircode.xlua.ui.interfaces.ILoader;
 import eu.faircode.xlua.utilities.SettingUtil;
@@ -125,6 +126,14 @@ public class AdapterConfig extends RecyclerView.Adapter<AdapterConfig.ViewHolder
         @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(final View view) {
+
+            Log.i("XLua.AdapterConfig", "IsOpen=" + vf.isOpen() + " IsScrollable=" + vf.isRecyclerScrollable() + " IsActionOpen=" + vf.isActionOpen() + " IsMainHidden="+ vf.isMainHidden());
+
+            //if(!vf.isOpen() && !vf.isRecyclerScrollable())
+            //    vf.invokeFloatingActions();
+
+            vf.handleFloatingActions();
+
             int id = view.getId();
             XLog.i("onClick id=" + id);
             final LuaSettingExtended setting = settings.get(getAdapterPosition());
@@ -212,8 +221,10 @@ public class AdapterConfig extends RecyclerView.Adapter<AdapterConfig.ViewHolder
         }
     }
 
+    private ViewFloatingAction vf;
+
     AdapterConfig() { setHasStableIds(true); }
-    AdapterConfig(ILoader fragmentLoader) { this(); this.fragmentLoader = fragmentLoader; }
+    AdapterConfig(ILoader fragmentLoader, ViewFloatingAction vf) { this(); this.fragmentLoader = fragmentLoader; this.vf = vf; }
 
     void applyConfig(Context context) {
         config.saveValuesFromInput();

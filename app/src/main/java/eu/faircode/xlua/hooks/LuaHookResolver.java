@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
+import eu.faircode.xlua.Str;
 import eu.faircode.xlua.logger.XLog;
 import eu.faircode.xlua.utilities.ReflectUtil;
 
@@ -45,8 +46,9 @@ public class LuaHookResolver {
 
     public boolean hasMismatchReturn(Class<?> compareType) {
         if(!isConstructor() && !ReflectUtil.returnTypeIsValid(compareType, returnType)) {
-            XLog.e("Invalid return type " + compareType + " got needed: " + returnType);
-            return true;
+            XLog.e("Invalid return type " + compareType + " got, needed: " + returnType);
+            //return true;
+            return !ReflectUtil.sameTypes(compareType, returnType);
         } return false;
     }
 
@@ -54,7 +56,7 @@ public class LuaHookResolver {
         try {
             return ReflectUtil.resolveMember(clazz, methodName, paramTypes);
         }catch (NoSuchMethodException e) {
-            XLog.e("Failed to resolve Member: " + this , e, true);
+            XLog.e("Failed to resolve Member: " + this , e, false);
             return null;
         }
     }
@@ -65,7 +67,7 @@ public class LuaHookResolver {
             if(setAccessible) field.setAccessible(true);
             return field;
         }catch (Exception e) {
-            XLog.e("Failed to Resolve Field: " + this, e, true);
+            XLog.e("Failed to Resolve Field: " + this, e, false);
             return null;
         }
     }

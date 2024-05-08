@@ -49,13 +49,15 @@ import eu.faircode.xlua.logger.XLog;
 import eu.faircode.xlua.ui.ConfigQue;
 import eu.faircode.xlua.ui.ViewFloatingAction;
 import eu.faircode.xlua.ui.dialogs.ConfigDeleteDialog;
+import eu.faircode.xlua.ui.dialogs.RenameDialogEx;
 import eu.faircode.xlua.ui.interfaces.IConfigUpdate;
 import eu.faircode.xlua.ui.interfaces.ILoader;
 import eu.faircode.xlua.ui.transactions.ConfigTransactionResult;
 import eu.faircode.xlua.utilities.FileDialogUtil;
 import eu.faircode.xlua.utilities.UiUtil;
 
-public class  FragmentConfig extends ViewFloatingAction implements
+public class  FragmentConfig extends
+        ViewFloatingAction implements
         View.OnClickListener,
         View.OnLongClickListener,
         AdapterView.OnItemSelectedListener,
@@ -104,7 +106,7 @@ public class  FragmentConfig extends ViewFloatingAction implements
 
         llm.setAutoMeasureEnabled(true);
         rvList.setLayoutManager(llm);
-        rvConfigAdapter = new AdapterConfig(this);
+        rvConfigAdapter = new AdapterConfig(this, this);
         rvList.setAdapter(rvConfigAdapter);
         configsQue = new ConfigQue(application);
         initDropDown(view);
@@ -146,6 +148,9 @@ public class  FragmentConfig extends ViewFloatingAction implements
     public void onClick(View v) {
         int id = v.getId();
         XLog.i("onClick id=" + id);
+        if(!isOpen() && !isRecyclerScrollable())
+            invokeFloatingActions();
+
         try {
             MockConfig config = rvConfigAdapter.getConfig();
             switch (id) {
@@ -276,6 +281,11 @@ public class  FragmentConfig extends ViewFloatingAction implements
                             MockConfig conf = spConfigs.getItem(i);
                             assert conf != null;
                             if(configName.equals(conf.getName())) {
+                                new RenameDialogEx()
+                                        .setConfig(config)
+                                        .setCallback(this)
+                                        .show(Objects.requireNonNull(getFragmentManager()), getString(R.string.title_config_rename_config));
+
                                 configName += "-" + ThreadLocalRandom.current().nextInt(10000,999999999);
                                 config.setName(configName);
                                 break;
@@ -371,14 +381,15 @@ public class  FragmentConfig extends ViewFloatingAction implements
     public void onConfigUpdate(ConfigTransactionResult result) {
         Snackbar.make(view, result.result.getResultMessage(), Snackbar.LENGTH_LONG).show();
         if(result.hasAnySucceeded()) {
-            MockConfig config = result.getConfig();
-            MockConfigPacket packet = result.getPacket();
-            unSaved.remove(config);
-            if(packet.getSettings().size() != config.getSettings().size()) {
-                config.setSettings(packet.getSettings());
-                rvConfigAdapter.set(config);
+            if(result.code != -1) {
+                MockConfig config = result.getConfig();
+                MockConfigPacket packet = result.getPacket();
+                unSaved.remove(config);
+                if(packet.getSettings().size() != config.getSettings().size()) {
+                    config.setSettings(packet.getSettings());
+                    rvConfigAdapter.set(config);
+                }
             }
-
             loadData();
         }
     }

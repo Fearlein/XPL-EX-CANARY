@@ -20,7 +20,10 @@ import javax.microedition.khronos.opengles.GL;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import eu.faircode.xlua.Str;
+
 public class ReflectUtil {
+    private static final String JAVA_LANG = "java.lang";
 
 
 
@@ -43,6 +46,27 @@ public class ReflectUtil {
             return false;
 
         return compareType.isAssignableFrom(returnType);
+    }
+
+
+    public static boolean sameTypes(Class<?> a, Class<?> b) {
+        String aType = a.getName().toLowerCase();
+        String bType = b.getName().toLowerCase();
+        if(aType.startsWith(JAVA_LANG) || bType.startsWith(JAVA_LANG)) {
+            //Log.e(TAG, "ATYPE=" + aType + " BTYPE=" + bType);
+            if(aType.contains(".")) aType = Str.getLastString(aType, ".");
+            if(bType.contains(".")) bType = Str.getLastString(bType, ".");
+            //.e(TAG, "ANAME=" + aType + " BNAME=" + bType);
+            if(aType.startsWith("bool")) return bType.startsWith("bool");
+            if(aType.startsWith("int")) return bType.startsWith("int");
+            if(aType.equals("long")) return bType.equals(aType);
+            if(aType.equals("float")) return bType.equals(aType);
+            if(aType.equals("double")) return bType.equals(aType);
+            if(aType.equals("short")) return bType.equals(aType);
+            if(aType.equals("string")) return bType.equals(aType);
+        }
+
+        return false;
     }
 
 

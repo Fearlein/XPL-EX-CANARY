@@ -1,6 +1,9 @@
 function after(hook, param)
     local result = param:getResult()
-    if param:getException() ~= nil or result == nil then
+    --if param:getException() ~= nil or result == nil then
+    --    return false
+    --end
+    if result == nil then
         return false
     end
 
@@ -9,7 +12,7 @@ function after(hook, param)
         return false
     end
 
-    local provider = param:getSetting("location..provider")
+    local provider = param:getSetting("location.provider")
     if provider == nil then
         provider = "privacy"
     end

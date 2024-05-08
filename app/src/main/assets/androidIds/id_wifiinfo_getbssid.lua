@@ -6,7 +6,7 @@ function after(hook, param)
 
     local setting = param:getSetting("unique.network.bssid")
     if setting == nil then
-        setting = "00:00:00:00:00"
+        setting = "00:00:00:00:00:00"
     end
 
     param:setResult(setting)

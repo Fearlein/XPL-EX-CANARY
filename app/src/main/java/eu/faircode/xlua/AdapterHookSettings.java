@@ -298,6 +298,7 @@ public class AdapterHookSettings extends RecyclerView.Adapter<AdapterHookSetting
         boolean enable = UiUtil.initRandomizer(holder.adapterRandomizer, holder.spRandomSelector, setting, randomizers);
         holder.spRandomSelector.setEnabled(enable);
         holder.btRandomize.setEnabled(enable);
+        holder.tiSettingValue.setEnabled(!setting.getName().endsWith(".bool"));
         setting.setInputText();
         holder.updateExpanded();
         holder.wire();

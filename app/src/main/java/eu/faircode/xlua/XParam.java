@@ -19,7 +19,6 @@
 
 package eu.faircode.xlua;
 
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -39,6 +38,7 @@ import java.io.FileDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +53,9 @@ import eu.faircode.xlua.interceptors.shell.ShellInterceptionResult;
 import eu.faircode.xlua.interceptors.UserContextMaps;
 import eu.faircode.xlua.interceptors.ShellIntercept;
 import eu.faircode.xlua.logger.XLog;
+import eu.faircode.xlua.rootbox.XReflectUtils;
+import eu.faircode.xlua.tools.BytesReplacer;
+import eu.faircode.xlua.utilities.EvidenceUtil;
 import eu.faircode.xlua.utilities.ListFilterUtil;
 import eu.faircode.xlua.utilities.CollectionUtil;
 import eu.faircode.xlua.utilities.CursorUtil;
@@ -69,6 +72,7 @@ import eu.faircode.xlua.utilities.StringUtil;
 import eu.faircode.xlua.utilities.MockUtils;
 
 public class XParam {
+    private static final List<String> ALLOWED_PACKAGES = Arrays.asList("google", "system", "settings", "android", "webview");
     private static final String TAG = "XLua.XParam";
 
     private final Context context;
@@ -154,10 +158,8 @@ public class XParam {
 
         Integer code = propSettings.get(property);
         if(code != null) {
-            if(code == MockPropSetting.PROP_HIDE)
-                return null;//return MockUtils.HIDE_PROPERTY;
-            if(code == MockPropSetting.PROP_SKIP)
-                return MockUtils.NOT_BLACKLISTED;
+            if(code == MockPropSetting.PROP_HIDE) return null;//return MockUtils.HIDE_PROPERTY;
+            if(code == MockPropSetting.PROP_SKIP) return MockUtils.NOT_BLACKLISTED;
             else {
                 if(code != MockPropSetting.PROP_FORCE) {
                     try {
@@ -181,98 +183,104 @@ public class XParam {
     }
 
     @SuppressWarnings("unused")
-    public String filterBinder(String filterKind) {
+    public String filterBinderProxyAfter(String filterKind) {
         try {
-            XLog.i("Filtering Binder Transaction! ADID");
+            Object ths = getThis();
+            Method mth = XReflectUtils.getMethodFor("android.os.BinderProxy", "getInterfaceDescriptor");
+            if (ths == null || mth == null)
+                throw new RuntimeException("No such Member [getInterfaceDescriptor] for Binder proxy and or the current Instance is NULL!");
+
+            String interfaceName = (String) mth.invoke(ths);
+            if (!Str.isValidNotWhitespaces(interfaceName))
+                throw new RuntimeException("Invalid Interface Name for the Binder Proxy! Method has failed to invoke...");
+
+            int code = (int) getArgument(0);
+            Parcel data = (Parcel) getArgument(1);
+            Parcel reply = (Parcel) getArgument(2);
             switch (filterKind) {
                 case "adid":
-                    IBinder binder = (IBinder)getThis();
-                    String iDesc = binder.getInterfaceDescriptor();
-                    XLog.i("(ADID) IDESC=" + iDesc);
-                    if("com.google.android.gms.ads.identifier.internal.IAdvertisingIdService".equalsIgnoreCase(iDesc)) {
-                        String setting = getSetting("unique.google.advertising.id");
-                        int code = (int)getArgument(0);
-                        XLog.i("Is GOOGLE GMS (ADID) code=" + code);
-                        if(code == 1) {
-                            Parcel reply = null;
-                            try {
-                                XLog.i("Obtaining Parcel  ADID");
-                                Method methodObtain = Parcel.class.getDeclaredMethod("obtain", Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? int.class : long.class);
-                                methodObtain.setAccessible(true);
-                                XLog.i("Invoking Reflected Method to obtain Parcel  ADID");
-                                reply = (Parcel) methodObtain.invoke(null,
-                                        param.args[2]);
-                                XLog.i("Reply has Finished from obtain Parcel for ADID");
-                            } catch (NoSuchMethodException ex) {
-                                XLog.e("No Such method ADID: ", ex, true);
-                                //XposedBridge.log("Fake Google Ads NoSuchMethodException ERROR: " + ex.getMessage());
-                            }catch (NullPointerException e) {
-                                XLog.e("Null ptr ADID: ", e, true);
-                                //XposedBridge.log("Fake Google Ads NullPointerException ERROR: " + e.getMessage());
-                            }
-                            if (reply == null) {
-                                XLog.e("Reply from obtained parcel is null!! ADID ");
-                                return null;
-                            } else {
-                                XLog.i("Writing to Reply Parcel ADID");
-                                if (setting == null) {
-                                    XLog.e("Setting is NULL for ADID Reply Parcel");
-                                    return null;
+                    if ("com.google.android.gms.ads.identifier.internal.IAdvertisingIdService".equalsIgnoreCase(interfaceName)) {
+                        Log.w(TAG, "Go purchase AppCloner (AppListo) stop cracking it skids! This method was brought to you from AppListo");
+                        String fAd = getSetting("unique.google.advertising.id");
+                        if(!Str.isValidNotWhitespaces(fAd)) return null;
+                        Object res = getResult();
+                        boolean result = (boolean) res;
+                        if (result) {
+                            byte[] bytes = reply.marshall();
+                            reply.setDataPosition(0);
+                            if (bytes.length == 84) {
+                                Log.i(TAG, "onAfterTransact; bytes: " + Str.bytesToHex(bytes));
+                                try {
+                                    reply.readException();
+                                } finally {
+                                    String adId = reply.readString();
+                                    Log.i(TAG, "onAfterTransact; adId: " + adId);
+                                    if (adId != null) {
+                                        try {
+                                            byte[] from = adId.getBytes("UTF-16");
+                                            from = Arrays.copyOfRange(from, 2, from.length);
+                                            Log.i(TAG, "onAfterTransact; from: " + Str.bytesToHex(from));
+
+                                            byte[] to = fAd.getBytes("UTF-16");
+                                            to = Arrays.copyOfRange(to, 2, to.length);
+                                            Log.i(TAG, "onAfterTransact; to: " + Str.bytesToHex(to));
+
+                                            BytesReplacer bytesReplacer = new BytesReplacer(from, to);
+                                            bytesReplacer.replace(bytes);
+
+                                            reply.unmarshall(bytes, 0, bytes.length);
+                                        } catch (Exception e) {
+                                            Log.w(TAG, e);
+                                            fAd = null;
+                                        }
+                                    }
+                                    reply.setDataPosition(0);
                                 }
-
-                                XLog.i("Writing: " + setting + " to ADID Reply Parcel");
-                                reply.setDataPosition(0);
-                                reply.writeNoException();
-                                reply.writeString(setting);
-                                XLog.i("Wrote to the Reply Parcel: ADID");
                             }
+                        }  return fAd;
+                    }
+                    break;
+            }
+        }catch (Throwable e) {
+            XLog.e("Failed to get Result / Transaction! before", e, true);
+        } return null;
+    }
 
-                            XLog.i("Returning from the Parcel: reply shit ADID");
-                            //param.setResult(Boolean.valueOf(true));
-                            return setting;
+    @SuppressWarnings("unused")
+    public String filterBinderProxyBefore(String filterKind) {
+        try {
+            Object ths = getThis();
+            Method mth = XReflectUtils.getMethodFor("android.os.BinderProxy", "getInterfaceDescriptor");
+            if(ths == null || mth == null)
+                throw new RuntimeException("No such Member [getInterfaceDescriptor] for Binder proxy and or the current Instance is NULL!");
 
+            String interfaceName = (String)mth.invoke(ths);
+            if(!Str.isValidNotWhitespaces(interfaceName))
+                throw new RuntimeException("Invalid Interface Name for the Binder Proxy! Method has failed to invoke...");
 
-
-
-
-                            /*XLog.i("Creating the Parcel: (adid)");
-                            Method methodObtain = Parcel.class.getDeclaredMethod("obtain", Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? int.class : long.class);
-                            methodObtain.setAccessible(true);
-                            reply = (Parcel) methodObtain.invoke(null,
-                                    param.args[2]);
-
-                            @SuppressLint("SoonBlockedPrivateApi")
-                            Method methodObtain = Parcel.class.getDeclaredMethod("obtain", int.class);
-                            methodObtain.setAccessible(true);
-                            Parcel reply = (Parcel) methodObtain.invoke(null, param.args[2]);
-                            //Parcel.obtain(int at index 2) (we do this becuz that function cannot be accessed)
-                            // static protected final Parcel obtain(int obj)
-                            //2 = reply position but on this OS Code it does not represent it as an INTEGER but a long ????
-                            XLog.i("Created the Parcel:  (adid)");
-
+            //public boolean transact(int code, Parcel data, Parcel reply, int flags)
+            Log.i(TAG, "Binder Interface:" + interfaceName);
+            int code = (int)getArgument(0);
+            Parcel data = (Parcel) getArgument(1);
+            Parcel reply = (Parcel) getArgument(2);
+            switch (filterKind) {
+                case "adid":
+                    if("com.google.android.gms.ads.identifier.internal.IAdvertisingIdService".equalsIgnoreCase(interfaceName) && code == 1) {
+                        XLog.i("Advertising ID Binder being Intercepted! " + interfaceName);
+                        String fake = getSettingReMap("unique.google.advertising.id", "ad.id");
+                        if(fake != null) {
                             reply.setDataPosition(0);
                             reply.writeNoException();
-
-                            XLog.i("Set Position in Parcel:  (adid)");
-
-                            String adid = getSetting("unique.google.advertising.id","a7bf815a-c37b-40db-be9d-3b395abbe888");
-                            if(adid == null)
-                                return null;
-
-                            XLog.i("Ad id is not null " + adid + "    (adid)");
-
-                            reply.writeString(adid);
-
-                            XLog.i("Wrote the data:  (adid)");
-                            //param.setResult(true);
-                            return adid;
-                            //param.setResult(true);*/
+                            reply.writeString(fake);
+                            reply.setDataPosition(0);
+                            return fake;
                         }
                     }
                     break;
             }
-        }catch (Exception e) { XLog.e("Failed to Filter", e); }
-        return null;
+        }catch (Exception e) {
+            XLog.e("Failed to Filter Binder Transaction!", e, true);
+        } return null;
     }
 
     @SuppressWarnings("unused")
@@ -284,31 +292,37 @@ public class XParam {
         if (!(arg instanceof String))
             return false;
 
-        String set = (String)arg;
-        Log.d(TAG, "[xlog] Settings$Secure=> " + set);
-
+        String set = ((String)arg).toLowerCase();
         switch (setting) {
             case "android_id":
                 if(set.equalsIgnoreCase(setting)) {
-                    setResult(getSettingReMap("unique.android.id", "value.android_id", "0000000000000000"));
+                    String v = getSettingReMap("unique.android.id", "value.android_id", "0000000000000000");
+                    if(v == null) return false;
+                    setResult(v);
                     return true;
                 }
                 break;
             case "bluetooth_name":
                 if(set.equalsIgnoreCase(setting)) {
-                    setResult(getSettingReMap("unique.bluetooth.address", "bluetooth.id", "00:00:00:00:00:00"));
+                    String v = getSettingReMap("unique.bluetooth.address", "bluetooth.id", "00:00:00:00:00:00");
+                    if(v == null) return false;
+                    setResult(v);
                     return true;
                 }
                 break;
             case "advertising_id":
                 if(set.equalsIgnoreCase(setting)) {
-                    setResult(getSettingReMap("unique.google.advertising.id", "ad.id", "84630630-u4ls-k487-f35f-h37afe0pomwq"));
+                    String v = getSettingReMap("unique.google.advertising.id", "ad.id", "84630630-u4ls-k487-f35f-h37afe0pomwq");
+                    if(v == null) return false;
+                    setResult(v);
                     return true;
                 }
         }
 
         return false;
     }
+
+
 
     //
     //End of FILTER Functions
@@ -330,18 +344,59 @@ public class XParam {
     public List<String> filterFileStringList(List<String> files) { return FileUtil.filterList(files); }
 
     @SuppressWarnings("unused")
-    public boolean listHasString(String setting, String str) {
-        if(str.equalsIgnoreCase(this.packageName) || str.toLowerCase().contains("webview")) return true;
-        if(!StringUtil.isValidAndNotWhitespaces(str)) return false;
-        String allow = getSetting(setting);
-        if(!StringUtil.isValidAndNotWhitespaces(allow)) return false;
-        if(allow.equals("*")) return true;
-        if(!allow.contains(",")) return allow.equalsIgnoreCase(str);
-        String[] splt = allow.split(",");
-        for(String s : splt) if(s.equalsIgnoreCase(str)) return true;
-        return false;
-    }
+    public boolean isPackageAllowed(String str) {
+        if(str == null || str.isEmpty() || str.equalsIgnoreCase(this.packageName)) return true;
+        str = str.toLowerCase().trim();
+        String blackSetting = getSetting("applications.blacklist.mode.bool");
+        if(blackSetting != null) {
+            boolean isBlacklist = StringUtil.toBoolean(blackSetting, false);
+            if(isBlacklist) {
+                String block = getSetting("applications.block.list");
+                if(Str.isValidNotWhitespaces(block)) {
+                    block = block.trim();
+                    if(block.contains(",")) {
+                        String[] blocked = block.split(",");
+                        for(String b : blocked)
+                            if(b.trim().equalsIgnoreCase(str))
+                                return false;
+                    }else {
+                        if(block.equalsIgnoreCase("*"))
+                            return false;
+                        else if(block.equalsIgnoreCase(str))
+                            return false;
+                    }
+                }
+            } else {
+                String allow = getSetting("applications.allow.list");
+                if(Str.isValidNotWhitespaces(allow)) {
+                    allow = allow.trim();
+                    if(allow.contains(",")) {
+                        String[] allowed = allow.split(",");
+                        for(String a : allowed)
+                            if(a.trim().equalsIgnoreCase(str))
+                                return true;
+                    }else {
+                        if(allow.equalsIgnoreCase("*"))
+                            return true;
+                        else if(allow.equalsIgnoreCase(str))
+                            return true;
+                    }
+                }
+                if(EvidenceUtil.packageName(str, 3))
+                    return false;
 
+                for(String p : ALLOWED_PACKAGES)
+                    if(str.contains(p))
+                        return true;
+
+                return false;
+            }
+        }
+        if(EvidenceUtil.packageName(str, 3))
+            return false;
+
+        return true;
+    }
 
     //
     //Shell Intercept
@@ -510,6 +565,32 @@ public class XParam {
     //
 
     @SuppressWarnings("unused")
+    public static File[] fileArrayHasEvidence(File[] files, int code) { return EvidenceUtil.fileArray(files, code); }
+    @SuppressWarnings("unused")
+    public static List<File> fileListHasEvidence(List<File> files, int code) { return EvidenceUtil.fileList(files, code); }
+    @SuppressWarnings("unused")
+    public static String[] stringArrayHasEvidence(String[] file, int code) { return EvidenceUtil.stringArray(file, code); }
+    @SuppressWarnings("unused")
+    public static List<String> stringListHasEvidence(List<String> files, int code) { return EvidenceUtil.stringList(files, code); }
+    @SuppressWarnings("unused")
+    public static boolean packageNameHasEvidence(String packageName, int code) { return EvidenceUtil.packageName(packageName, code); }
+    @SuppressWarnings("unused")
+    public static boolean fileIsEvidence(String file, int code) { return EvidenceUtil.file(new File(file), code); }
+    @SuppressWarnings("unused")
+    public static boolean fileIsEvidence(File file,  int code) { return EvidenceUtil.file(file.getAbsolutePath(), file.getName(), code); }
+    @SuppressWarnings("unused")
+    public static boolean fileIsEvidence(String fileFull, String fileName, int code) { return EvidenceUtil.file(fileFull, fileName, code); }
+
+    @SuppressWarnings("unused")
+    public String paypalFillZeros(String s) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < s.length(); i++)
+            sb.append("0");
+
+        return sb.toString();
+    }
+
+    @SuppressWarnings("unused")
     public String[] extractSelectionArgs() {
         String[] sel = null;
         if(paramTypes[2].getName().equals(Bundle.class.getName())){
@@ -536,29 +617,45 @@ public class XParam {
     public boolean queryFilterAfter(String filter, Uri uri) throws Throwable {
         String authority = uri.getAuthority();
         Cursor ret = (Cursor) getResult();
-
         if(ret == null || authority == null)
             return false;
 
+        //com.facebook.katana.provider.AttributionIdProvider
+        authority = authority.toLowerCase();
         switch (filter) {
             case "gsf_id":
-                if(authority.equals("com.google.android.gsf.gservices")) {
+                if(authority.endsWith("com.google.android.gsf.gservices")) {
                     String[] args = extractSelectionArgs();
                     if (args == null)
                         return false;
 
                     for(String arg : args) {
-                        Log.d(TAG, "matrix=" + arg);
-                        if(arg.equals("android_id")) {
+                        if(arg.equalsIgnoreCase("android_id")) {
                             String newId = getSetting("unique.gsf.id");
                             if(newId == null)
                                 return false;
 
-                            Log.d(TAG, "GSF new=" + newId);//" column modify=" + modify)
+                            Log.d(TAG, "GSF new=" + newId);
                             Cursor cc = CursorUtil.copyKeyValue(ret, "android_id", newId);
                             Log.d(TAG, "GSF Matrix Cursor Column Count=" + cc.getColumnCount());
                             setResult(cc);
                             return true;
+                        }
+                    }
+                }
+                break;
+            case "fb_id":
+                if(authority.endsWith("com.facebook.katana.provider.AttributionIdProvider")) {
+                    String[] args = extractSelectionArgs();
+                    if (args == null)
+                        return false;
+
+                    for(String arg : args) {
+                        if(arg.equalsIgnoreCase("aid")) {
+                            String newId = getSetting("unique.google.advertising.id");
+                            if(newId == null)
+                                return false;
+
                         }
                     }
                 }
@@ -593,6 +690,11 @@ public class XParam {
 
     @SuppressWarnings("unused")
     public void printFileContents(String filePath) { FileUtil.printContents(filePath); }
+
+    @SuppressWarnings("unused")
+    public void printStack() {
+        Log.w("XLua.XParam", Log.getStackTraceString(new Throwable()));
+    }
 
     //
     //Start of REFLECT Functions
@@ -667,10 +769,15 @@ public class XParam {
     //End of REFLECT Functions
     //
 
+    @SuppressWarnings("unused")
+    public boolean hasFunction(String classPath, String function) { return XReflectUtils.methodExists(classPath, function); }
+
+    @SuppressWarnings("unused")
+    public boolean hasFunction(String function) { return XReflectUtils.methodExists(getThis().getClass().getName(), function); }
+
     //
     //START OF LONG HELPER FUNCTIONS
     //
-
     @SuppressWarnings("unused")
     public String getFieldLong(Object instance, String fieldName) { return Long.toString(LuaLongUtil.getFieldValue(instance, fieldName)); }
 

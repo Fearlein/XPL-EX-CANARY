@@ -68,9 +68,7 @@ public class LuaHookWrapper {
         };
     }
 
-    public boolean isValid() {
-        return func != null && !func.isnil();
-    }
+    public boolean isValid() { return func != null && !func.isnil(); }
     public Varargs invoke() {
         if(!isValid()) return null;
         return func.invoke(args);

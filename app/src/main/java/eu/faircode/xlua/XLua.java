@@ -27,6 +27,7 @@ import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Process;
 import android.os.SystemClock;
 import android.util.Log;
@@ -304,6 +305,10 @@ public class XLua implements IXposedHookZygoteInit, IXposedHookLoadPackage {
                     final Member member = target.tryGetAsMember();
                     if(member != null) {
                         XLog.w("Member Method Name=" + member.getName());
+
+
+
+
                         if(target.hasMismatchReturn(member)) {
                             XLog.e("Invalid Return Type for Hook: " + hook.getId());
                             continue;
@@ -314,7 +319,6 @@ public class XLua implements IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                             @Override
                             protected void beforeHookedMethod(MethodHookParam param)  {
-                                if(target.preInit) try { super.beforeHookedMethod(param);  } catch (Throwable ignored) {  }
                                 execute(param, "before");
                             }
 
@@ -357,7 +361,7 @@ public class XLua implements IXposedHookZygoteInit, IXposedHookLoadPackage {
                                                         pName);
 
                                         if(!luaMember.isValid()) {
-                                            XLog.w("Lua Member is Not Valid [" + target.methodName + "]");
+                                            XLog.w("Lua Member is Not Valid [" + target.methodName + "] Most likely not a after or before : now a:" + function);
                                             return;
                                         }
                                     }

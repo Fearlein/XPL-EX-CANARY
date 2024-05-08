@@ -27,6 +27,7 @@ import eu.faircode.xlua.random.randomizers.RandomDateThree;
 import eu.faircode.xlua.random.randomizers.RandomDateTwo;
 import eu.faircode.xlua.random.randomizers.RandomDateZero;
 import eu.faircode.xlua.random.randomizers.RandomDevCodeName;
+import eu.faircode.xlua.random.randomizers.RandomFirebaseId;
 import eu.faircode.xlua.random.randomizers.RandomGSF;
 import eu.faircode.xlua.random.randomizers.RandomGameID;
 import eu.faircode.xlua.random.randomizers.RandomHostName;
@@ -60,12 +61,20 @@ import eu.faircode.xlua.random.randomizers.RandomSubscriberID;
 import eu.faircode.xlua.random.randomizers.RandomUserAgentManager;
 import eu.faircode.xlua.random.randomizers.RandomVoiceMailID;
 import eu.faircode.xlua.random.randomizers.RandomDateEpoch;
+import eu.faircode.xlua.random.zone.RandomZone;
 
 public class GlobalRandoms {
     private static final Object lock = new Object();
     public static Map<String, IRandomizer> randomizers = new Hashtable<>();
 
     public static void putRandomizer(IRandomizer randomizer) { synchronized (lock) { randomizers.put(randomizer.getSettingName(), randomizer); } }
+    public static void putRandomizers(List<IRandomizer> rs) {
+        synchronized (lock) {
+            for(IRandomizer r : rs)
+                randomizers.put(r.getSettingName(), r);
+        }
+    }
+
     public static List<IRandomizer> getRandomizers() {
         synchronized (lock) {
             if(randomizers.isEmpty()) initRandomizers();
@@ -131,15 +140,17 @@ public class GlobalRandoms {
         putRandomizer(new RandomKernelSysName());
         putRandomizer(new RandomKernelVersion());
         //Collection Sort these ??????
+        putRandomizers(RandomZone.RANDOMIZERS);
+        putRandomizer(new RandomFirebaseId());
 
         putRandomizer(new RandomStringOne());
     }
 
+    public static boolean isRandomName(String name) { return "%random%".equalsIgnoreCase(name) || "%randomize%".equalsIgnoreCase(name); }
     public static void bindRandomToSettings(Map<String, String> settings) {
         List<IRandomizer> randomizers = getRandomizers();
         for(Map.Entry<String, String> s : settings.entrySet()) {
-            if(s.getValue().equalsIgnoreCase("%random%") ||
-                    s.getValue().equalsIgnoreCase("%randomize%")) {
+            if(isRandomName(s.getValue())) {
                 for(IRandomizer r : randomizers) {
                     if(r.isSetting(s.getKey())) {
                         String nv = r.generateString();
