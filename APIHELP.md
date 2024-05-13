@@ -129,6 +129,9 @@ List<File> fileListHasEvidence(List<File> files, int code)
 
 //Create a String Array with the Evidence it found removed
 String[] stringArrayHasEvidence(String[] file, int code)
+
+//Clean Stack Trace from any Evidence of Hooking / Hooked Functions
+StackTraceElement[] stackHasEvidence(StackTraceElement[] elements)
 ```
 
 ```LUA
@@ -378,6 +381,12 @@ boolean hasFunction(String function)
 
 //Check if a Function exists within a Class
 boolean hasFunction(String classPath, String function)
+
+//Check if a Field Exists in the "this" Object of the Instance / Hook
+boolean hasField(String field)
+
+//Check if a Field exists within a Class
+boolean hasField(String classPath, String field)
 
 ```
 
