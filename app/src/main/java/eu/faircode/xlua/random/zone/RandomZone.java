@@ -1,5 +1,7 @@
 package eu.faircode.xlua.random.zone;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -154,4 +156,8 @@ public class RandomZone implements IRandomizer {
 
     @Override
     public List<ISpinnerElement> getOptions() { return this.options; }
+
+    @NonNull
+    @Override
+    public String toString() { return getName(); }
 }

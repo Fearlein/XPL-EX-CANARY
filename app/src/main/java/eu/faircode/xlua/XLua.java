@@ -305,10 +305,6 @@ public class XLua implements IXposedHookZygoteInit, IXposedHookLoadPackage {
                     final Member member = target.tryGetAsMember();
                     if(member != null) {
                         XLog.w("Member Method Name=" + member.getName());
-
-
-
-
                         if(target.hasMismatchReturn(member)) {
                             XLog.e("Invalid Return Type for Hook: " + hook.getId());
                             continue;

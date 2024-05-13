@@ -193,7 +193,7 @@ public class FragmentSettings
             case R.id.cbUseDefaultSettings:
                 Toast.makeText(getContext(), R.string.menu_settings_use_default_hint, Toast.LENGTH_LONG).show();
                 break;
-            case R.id.ivBtSettingReset:
+            case R.id.btSettingsResetAll:
                 Snackbar.make(main, getString(R.string.menu_settings_reset_hint), Snackbar.LENGTH_LONG).show();
                 break;
             case R.id.btSettingsClearData:

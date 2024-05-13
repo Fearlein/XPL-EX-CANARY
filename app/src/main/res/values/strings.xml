@@ -69,7 +69,7 @@
         <![CDATA[<br>]]><![CDATA[<a href="https://xdaforums.com/t/app-vdinfos.4097379/">XDA</a>]]>
         <![CDATA[<br>]]><![CDATA[<a href="https://github.com/VD171/VD-Infos">GitHub</a>]]>
 
-        <![CDATA[<br><br>]]> 1.4.2.4 Changes v4
+        <![CDATA[<br><br>]]> 1.4.2.4 Changes v6
         <![CDATA[<br><br>]]>        [All]
         <![CDATA[<br>]]>    -> Improved Text View Lines using (maxLines) remove (Lines)
         <![CDATA[<br>]]>    -> Improved Reporter Code
@@ -347,6 +347,9 @@
     <string name="button_configs_hint" translatable="false">Configs Menu, modify application settings via Configs</string>
     <string name="button_settings_ex_hint" translatable="false">Advance Settings UI not from the Pro App</string>
     <string name="button_props_hint" translatable="false">Properties UI to control Properties Interceptor</string>
+
+    <string name="button_reset_settings_hint" translatable="false">Reset the Setting Values back to Null or Nothing</string>
+
 
     <string name="button_settings_reset_data_hint" translatable="false">Reset the Application Data, not Hooks or settings but the actual Data</string>
     <string name="button_settings_reset_data" translatable="false">Clear Data</string>

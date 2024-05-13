@@ -23,6 +23,7 @@ import android.app.ActivityManager;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.CaptivePortal;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -123,6 +124,8 @@ public class XParam {
             String key,
             boolean useDefault,
             String packageName) {
+
+
         this.context = context;
         this.field = null;
         this.param = param;
@@ -152,6 +155,8 @@ public class XParam {
     public String filterBuildProperty(String property) {
         if(property == null || MockUtils.isPropVxpOrLua(property))
             return MockUtils.NOT_BLACKLISTED;
+
+        
 
         if(DebugUtil.isDebug())
             Log.i(TAG, "Filtering Property=" + property + " prop maps=" + propMaps.size() + " settings size=" + settings.size());
@@ -242,7 +247,7 @@ public class XParam {
                     break;
             }
         }catch (Throwable e) {
-            XLog.e("Failed to get Result / Transaction! before", e, true);
+            XLog.e("Failed to get Result / Transaction! after", e, true);
         } return null;
     }
 
