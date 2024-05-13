@@ -1,0 +1,22 @@
+[
+  {
+    "builtin": true,
+    "collection": "PrivacyEx",
+    "group": "ID.User",
+    "name": "Agent/AdjustConfig.setUserAgent",
+    "author": "OBC",
+    "className": " android.app.ActivityManager",
+    "methodName": "setUserAgent",
+    "parameterTypes": [ "java.lang.String" ],
+    "returnType": "void",
+    "minSdk": 1,
+    "maxSdk": 999,
+    "version": 1,
+    "description": "",
+    "optional": true,
+    "usage": true,
+    "notify": false,
+    "luaScript": "@adjust_networkutil_setuseragent",
+    "settings":["user.agent"]
+  }
+]

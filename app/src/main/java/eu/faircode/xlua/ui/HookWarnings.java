@@ -10,7 +10,7 @@ import eu.faircode.xlua.R;
 import eu.faircode.xlua.utilities.PrefUtil;
 
 public class HookWarnings {
-    private static final List<String> WARNING_GROUPS = Arrays.asList("Hide.Environment", "Intercept.Shell", "Spoof.Embed.Paypal", "Spoof.GSM.Status", "Spoof.UserAgent", "Spoof.SOC.EX", "Intercept.Properties", "Spoof.Language", "Spoof.VPN.State", "Spoof.Features", "Get.Location", "Spoof.Location", "Get.App");
+    private static final List<String> WARNING_GROUPS = Arrays.asList("ID.User", "AD.Analytics.Spoof", "AD.Analytics", "Hide.Environment", "Intercept.Shell", "Spoof.Embed.Paypal", "Spoof.GSM.Status", "Spoof.UserAgent", "Spoof.SOC.EX", "Intercept.Properties", "Spoof.Language", "Spoof.VPN.State", "Spoof.Features", "Get.Location", "Spoof.Location", "Get.App");
     private static final HashMap<String, Boolean> localPrefs = new HashMap<>();
     public static boolean hasWarning(Context context, String group) {
         if(!WARNING_GROUPS.contains(group)) return false;
@@ -38,6 +38,12 @@ public class HookWarnings {
 
             if(show) {
                 switch (group) {
+                    case "ID.User":
+                        return context.getString(R.string.warning_hook_id_user);
+                    case "AD.Analytics":
+                        return context.getString(R.string.warning_hook_ad_analytics);
+                    case "AD.Analytics.Spoof":
+                        return context.getString(R.string.warning_hook_ad_analytics_spoof);
                     case "Spoof.UserAgent":
                         return context.getString(R.string.warning_hook_user_agent);
                     case "Spoof.SOC.EX":

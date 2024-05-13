@@ -48,14 +48,14 @@
     <string name="menu_whats_new_button" translatable="false">Whats New!</string>
 
     <string name="whats_new" translatable="false">
-        Whats new in 1.4.2.4 Update XPL-EX (ObbedCode) v77
+        Whats new in 1.4.2.4 Update XPL-EX (ObbedCode) v88
         <![CDATA[<br><br>]]> !!!Warning this is BETA it WILL have Bugs but over time code will be cleaned and things will be fixed!!!
         <![CDATA[<br><br>]]> Privacy will never be lost I wont stop til each app is FULLY black boxed.
         <![CDATA[<br>]]>This is my Art, Quality over Quantity so be patience pls and thanks to all who are patient!.
         <![CDATA[<br>]]>Free, Open Source, No Analytics, No Servers, offline ...
         <![CDATA[<br><br>]]> Shout out to Hubert (always keeps me informed updated!) (want to hide root ? this is your man!)
         <![CDATA[<br>]]>Telegram: <![CDATA[<a href="https://t.me/HubertHub">HubertHub</a>]]>
-        <![CDATA[<br><br>]]> Shout out to AppListo (Gives me Apis to Hooks when I am lost! pls Purchase AppCloner!)
+        <![CDATA[<br><br>]]> Shout out to AppListo (Purchase AppCloner!)
         <![CDATA[<br>]]>Website: <![CDATA[<a href="https://appcloner.app/">AppCloner</a>]]>
 
         <![CDATA[<br><br>]]><![CDATA[<a href="https://t.me/xplexex">XPL-EX Announcements</a>]]>
@@ -69,7 +69,7 @@
         <![CDATA[<br>]]><![CDATA[<a href="https://xdaforums.com/t/app-vdinfos.4097379/">XDA</a>]]>
         <![CDATA[<br>]]><![CDATA[<a href="https://github.com/VD171/VD-Infos">GitHub</a>]]>
 
-        <![CDATA[<br><br>]]> 1.4.2.4 Changes v6
+        <![CDATA[<br><br>]]> 1.4.2.4 Changes v7
         <![CDATA[<br><br>]]>        [All]
         <![CDATA[<br>]]>    -> Improved Text View Lines using (maxLines) remove (Lines)
         <![CDATA[<br>]]>    -> Improved Reporter Code
@@ -113,6 +113,22 @@
         <![CDATA[<br>]]>    -> Added More Cell Location Hooks
         <![CDATA[<br>]]>    -> Added More Specific Unique ID Hooks
         <![CDATA[<br>]]>    -> Added Zone Randomizers (beta)
+        <![CDATA[<br>]]>    -> Added (Sensors) Hooks
+        <![CDATA[<br>]]>    -> Enhanced Properties Interceptor to work with Emulator Root Detection Hiding as well as Shell Intercept
+        <![CDATA[<br>]]>    -> Modified the Intercept Shell APIs to Set Result if Return of Hooked Function is java.lang.Process
+        <![CDATA[<br>]]>    -> Added Even more LUA APIs to use for you Script kitties !
+        <![CDATA[<br>]]>    -> Added logcat Command to Intercept
+        <![CDATA[<br>]]>    -> Added Stack Trace Hooks, to ensure Stack Trace dosnt show Traces of Hooks
+        <![CDATA[<br>]]>    -> Added more Properties (9+)
+        <![CDATA[<br>]]>        [1] gsm.device.imei0, gsm.device.imei1, gsm.device.imei
+        <![CDATA[<br>]]>        [2] persist.sys.tctPowerIccid
+        <![CDATA[<br>]]>        [3] ro.boot.wifimacaddr
+        <![CDATA[<br>]]>        [4] ro.boot.wifi_mac
+        <![CDATA[<br>]]>        [5] ro.boot.bt_mac
+        <![CDATA[<br>]]>        [6] persist.sys.imei0, persist.sys.imei1, persist.sys.imei
+        <![CDATA[<br>]]>        [7] persist.sys.verizon_test_plan_imei
+        <![CDATA[<br>]]>        [8] persist.sys.verizon_test_plan_iccid
+        <![CDATA[<br>]]>        [9] vendor.gsm.serial
 
         <![CDATA[<br><br>]]> 1.4.2.3 Changes
         <![CDATA[<br><br>]]>        [Coming Soon possibly next update...]
@@ -211,7 +227,10 @@
     <string name="warning_hook_gsm_status" translatable="false">These hooks will only Spoof the State of Data as in it will show it as enabled despite it being disabled.</string>
     <string name="warning_hook_embed_paypal" translatable="false">This will ATTEMPT to spoof the Environment to HELP trick Paypal payment gateways within apps that the phone its working off of is not Rooted or a Emulator. This is an ATTEMPT nothing bullet proof.</string>
     <string name="warning_hook_intercept_shell" translatable="false">You can control the commands it will intercept (hardcoded) in the settings UI containing SHELL. If the app uses Native Shell this hook will not work!</string>
-    <string name="warning_hook_hide_environment" translatable="false">This hook will ATTEMPT to Hide if the System is an Emulator and or is Rooted. By NO means this Bulletproof or even SUPER especially if target app uses Native Detection methods. DO NOT complain if it does not Hide it for some APPS, to ensure it works the best select the (Intercept Shell, Intercept Properties, and Get Apps) Hooks. Of course combine Get Apps with HMA (Hide my App List) Get Apps Hook if Whitelist Mode is enabled will automatically block MY hardcoded list of Root packages to ensure strength put in your own list as well in settings.</string>
+    <string name="warning_hook_hide_environment" translatable="false">This hook will ATTEMPT to Hide if the System is an Emulator and or is Rooted. By NO means this Bulletproof or even SUPER especially if target app uses Native Detection methods. DO NOT complain if it does not Hide it for some APPS, to ensure it works the best select the (Intercept Shell, Intercept Properties, and Get Apps) Hooks. Of course combine Get Apps with HMA (Hide my App List) Get Apps Hook if Whitelist Mode is enabled will automatically block MY hardcoded list of Root packages to ensure strength put in your own list as well in settings. Finally in settings enable (hide.root) and (hide.emulator)</string>
+    <string name="warning_hook_ad_analytics" translatable="false">This will attempt to DISABLE the Analytics Libraries from being loaded into the Application. This DOES NOT support all (80+) Right now so be patient til I get around to all of them. If analytics is till being loaded in and or Ads that means its not supported for now. This can also cause Applications to crash if they HEAVILY depend on the Analytics / Ad library</string>
+    <string name="warning_hook_ad_analytics_spoof" translatable="false">This will not DISABLE the Analytics / AD  Libraries from being loaded in but will Spoof Unique / Critical IDs and or Keys within the library to make analytics more difficult</string>
+    <string name="warning_hook_id_user" translatable="false">Enabling this will Spoof the user Via Activity Manager but not using the Command Whoami. To ensure this works enable the whoami command intercept in settings then select the Intercept Shell Hook Group. Activity Manager method will also only be useful for Application that have higher level privileges either via system or root.</string>
 
 
     <string name="warning_hook_get_location" translatable="false">Get Location will will allow control over the target application if it is ALLOWED to get the Location versus Spoofing or Spoof Location will imply that you allow it to get location now you want to spoof it.</string>
@@ -355,7 +374,10 @@
     <string name="button_settings_reset_data" translatable="false">Clear Data</string>
     <string name="button_settings_save_checked_hint" translatable="false">Save what is Checked so next time you open the UI it will have those selections checked.</string>
     <string name="button_settings_save_checked" translatable="false">Save Checked</string>
+    <string name="button_settings_export_to_config_hint" translatable="false">Export the Selected Settings to a Config to be used in the Configs UI or for other out</string>
+    <string name="button_settings_export_to_config" translatable="false">Export to Config</string>
 
+    <string name="msg_settings_to_config_exporting" translatable="false">Exporting Settings to a Config</string>
 
 
     <string name="check_prop_hide_hint" translatable="false">Hide Specific Property from Build Props</string>

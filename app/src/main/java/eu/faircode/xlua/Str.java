@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Str {
+    public static final String EMPTY = "";
     public static final String ASTERISK = "*";
     public static final String COLLEN = ":";
     public static final String NEW_LINE = "\n";
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
 
-    public static final Character EMPTY_CHAR = ' ';
+    public static final Character SPACE_CHAR = ' ';
 
     public static String combine(String str1, String str2) { return combine(str1, str2, true); }
     public static String combine(String str1, String str2, boolean useNewLine) {
@@ -138,5 +141,18 @@ public class Str {
         }
 
         return sb.toString();
+    }
+
+    public static Boolean toBoolean(String str) { return toBoolean(str, null); }
+    public static Boolean toBoolean(String str, Boolean defaultValue) {
+        try {
+            if(str == null || TextUtils.isEmpty(str)) return defaultValue;
+            str = str.trim().toLowerCase();
+            if(str.equals("yes") || str.equals("true") || str.equals("1") || str.equals("checked") || str.equals("enabled") || str.equals("succeed") || str.equals("succeeded")) return true;
+            if(str.equals("no") || str.equals("false") || str.equals("0") || str.equals("unchecked") || str.equals("disabled") || str.equals("fail") || str.equals("failed") || str.equals("error")) return false;
+            return defaultValue;
+        }catch (Exception ex) {
+            return defaultValue;
+        }
     }
 }
