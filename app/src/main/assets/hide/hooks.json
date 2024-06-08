@@ -1,5 +1,5 @@
 [
-  {
+  /*{
     "builtin": true,
     "collection": "Hide",
     "group": "Hide.Environment",
@@ -58,7 +58,7 @@
     "usage":true,
     "notify":false,
     "luaScript": "@hide_stack"
-  },
+  },*/
   {
     "builtin": true,
     "collection": "Hide",

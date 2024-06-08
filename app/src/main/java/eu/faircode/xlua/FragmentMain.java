@@ -140,7 +140,7 @@ public class FragmentMain extends Fragment implements ILoader {
         rvApplication.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity()) {
             @Override
-            public boolean onRequestChildFocus(RecyclerView parent, RecyclerView.State state, View child, View focused) {
+            public boolean onRequestChildFocus(@NonNull RecyclerView parent, @NonNull RecyclerView.State state, @NonNull View child, View focused) {
                 return true;
             }
         };
@@ -380,11 +380,11 @@ public class FragmentMain extends Fragment implements ILoader {
         }
     }
 
-    private BroadcastReceiver packageChangedReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver packageChangedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "Received " + intent);
-            String packageName = intent.getData().getSchemeSpecificPart();
+            String packageName = Objects.requireNonNull(intent.getData()).getSchemeSpecificPart();
             int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
             Log.i(TAG, "pkg=" + packageName + ":" + uid);
             loadData();

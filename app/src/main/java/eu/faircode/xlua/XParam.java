@@ -203,12 +203,10 @@ public class XParam {
         try {
             Object ths = getThis();
             Method mth = XReflectUtils.getMethodFor("android.os.BinderProxy", "getInterfaceDescriptor");
-            if (ths == null || mth == null)
-                throw new RuntimeException("No such Member [getInterfaceDescriptor] for Binder proxy and or the current Instance is NULL!");
+            if (ths == null || mth == null) throw new RuntimeException("No such Member [getInterfaceDescriptor] for Binder proxy and or the current Instance is NULL!");
 
             String interfaceName = (String) mth.invoke(ths);
-            if (!Str.isValidNotWhitespaces(interfaceName))
-                throw new RuntimeException("Invalid Interface Name for the Binder Proxy! Method has failed to invoke...");
+            if (!Str.isValidNotWhitespaces(interfaceName)) throw new RuntimeException("Invalid Interface Name for the Binder Proxy! Method has failed to invoke...");
 
             int code = (int) getArgument(0);
             Parcel data = (Parcel) getArgument(1);
@@ -253,8 +251,7 @@ public class XParam {
                                 }
                             }
                         }  return fAd;
-                    }
-                    break;
+                    } break;
             }
         }catch (Throwable e) {
             XLog.e("Failed to get Result / Transaction! after", e, true);
@@ -262,81 +259,19 @@ public class XParam {
     }
 
     @SuppressWarnings("unused")
-    public String filterBinderProxyBefore(String filterKind) {
+    public boolean filterSettingsSecure(String setting, String newValue) {
         try {
-            Object ths = getThis();
-            Method mth = XReflectUtils.getMethodFor("android.os.BinderProxy", "getInterfaceDescriptor");
-            if(ths == null || mth == null)
-                throw new RuntimeException("No such Member [getInterfaceDescriptor] for Binder proxy and or the current Instance is NULL!");
-
-            String interfaceName = (String)mth.invoke(ths);
-            if(!Str.isValidNotWhitespaces(interfaceName))
-                throw new RuntimeException("Invalid Interface Name for the Binder Proxy! Method has failed to invoke...");
-
-            //public boolean transact(int code, Parcel data, Parcel reply, int flags)
-            Log.i(TAG, "Binder Interface:" + interfaceName);
-            int code = (int)getArgument(0);
-            Parcel data = (Parcel) getArgument(1);
-            Parcel reply = (Parcel) getArgument(2);
-            switch (filterKind) {
-                case "adid":
-                    if("com.google.android.gms.ads.identifier.internal.IAdvertisingIdService".equalsIgnoreCase(interfaceName) && code == 1) {
-                        XLog.i("Advertising ID Binder being Intercepted! " + interfaceName);
-                        String fake = getSettingReMap("unique.google.advertising.id", "ad.id");
-                        if(fake != null) {
-                            reply.setDataPosition(0);
-                            reply.writeNoException();
-                            reply.writeString(fake);
-                            reply.setDataPosition(0);
-                            return fake;
-                        }
-                    }
-                    break;
+            Object arg = getArgument(1);
+            if(setting != null && newValue != null && arg instanceof String) {
+                String set = ((String)arg);
+                if(setting.equalsIgnoreCase(set)) {
+                    setResult(newValue);
+                    return true;
+                }
             }
-        }catch (Exception e) {
-            XLog.e("Failed to Filter Binder Transaction!", e, true);
-        } return null;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean filterSettingsSecure(String setting) throws Throwable {
-        Object arg = getArgument(1);
-        if(arg == null)
-            return false;
-
-        if (!(arg instanceof String))
-            return false;
-
-        String set = ((String)arg).toLowerCase();
-        switch (setting) {
-            case "android_id":
-                if(set.equalsIgnoreCase(setting)) {
-                    String v = getSettingReMap("unique.android.id", "value.android_id", "0000000000000000");
-                    if(v == null) return false;
-                    setResult(v);
-                    return true;
-                }
-                break;
-            case "bluetooth_name":
-                if(set.equalsIgnoreCase(setting)) {
-                    String v = getSettingReMap("unique.bluetooth.address", "bluetooth.id", "00:00:00:00:00:00");
-                    if(v == null) return false;
-                    setResult(v);
-                    return true;
-                }
-                break;
-            case "advertising_id":
-                if(set.equalsIgnoreCase(setting)) {
-                    String v = getSettingReMap("unique.google.advertising.id", "ad.id", "84630630-u4ls-k487-f35f-h37afe0pomwq");
-                    if(v == null) return false;
-                    setResult(v);
-                    return true;
-                }
-        }
-
+        }catch (Throwable e) { Log.e(TAG, "Filter SettingsSecure Error: " + e.getMessage()); }
         return false;
     }
-
 
     //
     //End of FILTER Functions
@@ -405,11 +340,7 @@ public class XParam {
 
                 return false;
             }
-        }
-        if(Evidence.packageName(str, 3))
-            return false;
-
-        return true;
+        } return !Evidence.packageName(str, 3);
     }
 
     //
@@ -497,7 +428,7 @@ public class XParam {
     public int getFileDescriptorId(FileDescriptor fs) { return FileUtil.getDescriptorNumber(fs);  }
 
     @SuppressWarnings("unused")
-    public File createFakeMeminfoFile(int totalGigabytes, int availableGigabytes) { return FileUtil.generateFakeFile(MemoryUtil.generateFakeMeminfoContents(totalGigabytes, availableGigabytes)); }
+    public File createFakeMeminfoFile(int totalGigabytes, int availableGigabytes) { return FileUtil.generateTempFakeFile(MemoryUtil.generateFakeMeminfoContents(totalGigabytes, availableGigabytes)); }
 
     @SuppressWarnings("unused")
     public FileDescriptor createFakeMeminfoFileDescriptor(int totalGigabytes, int availableGigabytes) { return FileUtil.generateFakeFileDescriptor(MemoryUtil.generateFakeMeminfoContents(totalGigabytes, availableGigabytes)); }
@@ -523,13 +454,13 @@ public class XParam {
     //
 
     @SuppressWarnings("unused")
-    public static Set<BluetoothDevice> filterSavedBluetoothDevices(Set<BluetoothDevice> devices, List<String> allowList) { return ListFilterUtil.filterSavedBluetoothDevices(devices, allowList); }
+    public Set<BluetoothDevice> filterSavedBluetoothDevices(Set<BluetoothDevice> devices, List<String> allowList) { return ListFilterUtil.filterSavedBluetoothDevices(devices, allowList); }
 
     @SuppressWarnings("unused")
-    public static List<ScanResult> filterWifiScanResults(List<ScanResult> results, List<String> allowList) { return ListFilterUtil.filterWifiScanResults(results, allowList); }
+    public List<ScanResult> filterWifiScanResults(List<ScanResult> results, List<String> allowList) { return ListFilterUtil.filterWifiScanResults(results, allowList); }
 
     @SuppressWarnings("unused")
-    public static List<WifiConfiguration> filterSavedWifiNetworks(List<WifiConfiguration> results, List<String> allowList) { return ListFilterUtil.filterSavedWifiNetworks(results, allowList); }
+    public List<WifiConfiguration> filterSavedWifiNetworks(List<WifiConfiguration> results, List<String> allowList) { return ListFilterUtil.filterSavedWifiNetworks(results, allowList); }
 
     //
     //End of Bluetooth Functions
@@ -583,32 +514,26 @@ public class XParam {
     //
 
     @SuppressWarnings("unused")
-    public static File[] fileArrayHasEvidence(File[] files, int code) { return Evidence.fileArray(files, code); }
+    public File[] fileArrayHasEvidence(File[] files, int code) { return Evidence.fileArray(files, code); }
     @SuppressWarnings("unused")
-    public static List<File> fileListHasEvidence(List<File> files, int code) { return Evidence.fileList(files, code); }
+    public List<File> fileListHasEvidence(List<File> files, int code) { return Evidence.fileList(files, code); }
     @SuppressWarnings("unused")
-    public static String[] stringArrayHasEvidence(String[] file, int code) { return Evidence.stringArray(file, code); }
+    public String[] stringArrayHasEvidence(String[] file, int code) { return Evidence.stringArray(file, code); }
     @SuppressWarnings("unused")
-    public static List<String> stringListHasEvidence(List<String> files, int code) { return Evidence.stringList(files, code); }
+    public List<String> stringListHasEvidence(List<String> files, int code) { return Evidence.stringList(files, code); }
     @SuppressWarnings("unused")
-    public static boolean packageNameHasEvidence(String packageName, int code) { return Evidence.packageName(packageName, code); }
+    public boolean packageNameHasEvidence(String packageName, int code) { return Evidence.packageName(packageName, code); }
     @SuppressWarnings("unused")
-    public static boolean fileIsEvidence(String file, int code) { return Evidence.file(new File(file), code); }
+    public boolean fileIsEvidence(String file, int code) { return Evidence.file(new File(file), code); }
     @SuppressWarnings("unused")
-    public static boolean fileIsEvidence(File file,  int code) { return Evidence.file(file.getAbsolutePath(), file.getName(), code); }
+    public boolean fileIsEvidence(File file,  int code) { return Evidence.file(file.getAbsolutePath(), file.getName(), code); }
     @SuppressWarnings("unused")
-    public static boolean fileIsEvidence(String fileFull, String fileName, int code) { return Evidence.file(fileFull, fileName, code); }
+    public boolean fileIsEvidence(String fileFull, String fileName, int code) { return Evidence.file(fileFull, fileName, code); }
     @SuppressWarnings("unused")
-    public static StackTraceElement[] stackHasEvidence(StackTraceElement[] elements) { return Evidence.stack(elements); }
+    public StackTraceElement[] stackHasEvidence(StackTraceElement[] elements) { return Evidence.stack(elements); }
 
     @SuppressWarnings("unused")
-    public String paypalFillZeros(String s) {
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < s.length(); i++)
-            sb.append("0");
-
-        return sb.toString();
-    }
+    public String createFilledString(String s, String fillChar) { return Str.createFilledCopy(s, fillChar); }
 
     @SuppressWarnings("unused")
     public String[] extractSelectionArgs() {
@@ -616,73 +541,35 @@ public class XParam {
         if(paramTypes[2].getName().equals(Bundle.class.getName())){
             //ContentResolver.query26
             Bundle bundle = (Bundle) getArgument(2);
-            if(bundle != null) {
-                sel = bundle.getStringArray("android:query-arg-sql-selection-args");
-            }
+            if(bundle != null) sel = bundle.getStringArray("android:query-arg-sql-selection-args");
         }
-        else if(paramTypes[3].getName().equals(String[].class.getName()))
-            sel = (String[]) getArgument(3);
-
+        else if(paramTypes[3].getName().equals(String[].class.getName())) sel = (String[]) getArgument(3);
         return sel;
     }
 
     @SuppressWarnings("unused")
-    public boolean queryFilterAfter(String filter) throws Throwable {
-        Uri uri = (Uri)getArgument(0);
-        if(uri == null) return false;
-        return queryFilterAfter(filter, uri);
-    }
+    public boolean queryFilterAfter(String serviceName, String columnName, String newValue) { return queryFilterAfter(serviceName, columnName, newValue, (Uri)getArgument(0)); }
 
     @SuppressWarnings("unused")
-    public boolean queryFilterAfter(String filter, Uri uri) throws Throwable {
-        String authority = uri.getAuthority();
-        Cursor ret = (Cursor) getResult();
-        if(ret == null || authority == null)
-            return false;
-
-        //com.facebook.katana.provider.AttributionIdProvider
-        authority = authority.toLowerCase();
-        switch (filter) {
-            case "gsf_id":
-                if(authority.endsWith("com.google.android.gsf.gservices")) {
+    public boolean queryFilterAfter(String serviceName, String columnName, String newValue, Uri uri) {
+        if(newValue != null && serviceName != null && columnName != null) {
+            try {
+                String authority = uri.getAuthority();
+                Cursor ret = (Cursor) getResult();
+                if((ret != null && authority != null) && authority.equalsIgnoreCase(serviceName)) {
                     String[] args = extractSelectionArgs();
-                    if (args == null)
-                        return false;
-
-                    for(String arg : args) {
-                        if(arg.equalsIgnoreCase("android_id")) {
-                            String newId = getSetting("unique.gsf.id");
-                            if(newId == null)
-                                return false;
-
-                            Log.d(TAG, "GSF new=" + newId);
-                            Cursor cc = CursorUtil.copyKeyValue(ret, "android_id", newId);
-                            Log.d(TAG, "GSF Matrix Cursor Column Count=" + cc.getColumnCount());
-                            setResult(cc);
-                            return true;
+                    if(args != null) {
+                        for(String arg : args) {
+                            if(arg.equalsIgnoreCase(newValue)) {
+                                Log.i(TAG, "Found Query Service [" + serviceName + "] and Column [" + columnName + "] new Value [" + newValue + "]");
+                                setResult(CursorUtil.copyKeyValue(ret, columnName, newValue));
+                                return true;
+                            }
                         }
                     }
                 }
-                break;
-            case "fb_id":
-                if(authority.endsWith("com.facebook.katana.provider.AttributionIdProvider")) {
-                    String[] args = extractSelectionArgs();
-                    if (args == null)
-                        return false;
-
-                    for(String arg : args) {
-                        if(arg.equalsIgnoreCase("aid")) {
-                            String newId = getSetting("unique.google.advertising.id");
-                            if(newId == null)
-                                return false;
-
-                        }
-                    }
-                }
-                break;
-        }
-
-        return false;
+            }catch (Throwable e) { Log.e(TAG, "LUA PARAM [queryFilterAfter] Error: " + e.getMessage()); }
+        } return false;
     }
 
     //
@@ -780,12 +667,9 @@ public class XParam {
     @SuppressWarnings("unused")
     public String bytesToSHA256Hash(byte[] bs) { return StringUtil.getBytesSHA256Hash(bs); }
 
-
-
     //
     //End of REFLECT Functions
     //
-
 
     @SuppressWarnings("unused")
     public boolean javaMethodExists(String className, String methodName) { return ReflectUtil.javaMethodExists(className, methodName); }
@@ -805,7 +689,11 @@ public class XParam {
     @SuppressWarnings("unused")
     public boolean hasFunction(String function) { return XReflectUtils.methodExists(getThis().getClass().getName(), function); }
 
-    public boolean hasField(String classPath, String field) { return XReflectUtils.classExists() }
+    @SuppressWarnings("unused")
+    public boolean hasField(String classPath, String field) { return XReflectUtils.fieldExists(classPath, field); }
+
+    @SuppressWarnings("unused")
+    public boolean hasField(String field) { return XReflectUtils.fieldExists(getThis().getClass().getName(), field); }
 
     //
     //START OF LONG HELPER FUNCTIONS
@@ -865,11 +753,8 @@ public class XParam {
         if (value != null) {
             value = coerceValue(this.paramTypes[index], value);
             if (!boxType(this.paramTypes[index]).isInstance(value))
-                throw new IllegalArgumentException(
-                        "Expected argument #" + index + " " + this.paramTypes[index] + " got " + value.getClass());
-        }
-
-        this.param.args[index] = value;
+                throw new IllegalArgumentException("Expected argument #" + index + " " + this.paramTypes[index] + " got " + value.getClass());
+        } this.param.args[index] = value;
     }
 
 

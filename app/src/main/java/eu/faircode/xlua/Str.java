@@ -17,6 +17,15 @@ public class Str {
 
     public static final Character SPACE_CHAR = ' ';
 
+
+    public static String createFilledCopy(String str, String fillChar) {
+        if(str == null) return fillChar;
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < str.length(); i++)
+            sb.append(fillChar);
+        return sb.toString();
+    }
+
     public static String combine(String str1, String str2) { return combine(str1, str2, true); }
     public static String combine(String str1, String str2, boolean useNewLine) {
         StringBuilder sb = new StringBuilder();
@@ -85,6 +94,17 @@ public class Str {
 
         return hexString.toString().trim();
     }
+
+    public static String getFirstString(String str, String delimiter) { return getFirstString(str, delimiter, null); }
+    public static String getFirstString(String str, String delimiter, String defaultValue) {
+        String trim = trim(str, delimiter, true);
+        if (delimiter == null || delimiter.isEmpty()) return defaultValue != null ? defaultValue : trim;
+        if (trim == null || trim.isEmpty()) return defaultValue;
+        if (!trim.contains(delimiter)) return trim;
+        String[] split = trim.split(Pattern.quote(delimiter));
+        return split.length > 0 ? split[0] : defaultValue;
+    }
+
 
     public static String getLastString(String str, String delimiter) { return getLastString(str, delimiter, null); }
     public static String getLastString(String str, String delimiter, String defaultValue) {
