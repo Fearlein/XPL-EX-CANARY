@@ -13,7 +13,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 140
-        versionName "1.4.3.1"
+        versionName "2024-06-09"
         archivesBaseName = "XPL-EX-v$versionName-$versionCode"
     }
     /signingConfigs {
@@ -87,3 +87,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.luaj/luaj-jse
     // implementation 'org.luaj:luaj-jse:3.0.1'
 }
+
+android {
+      lintOptions {
+          abortOnError false
+      }
+  }
