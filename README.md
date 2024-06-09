@@ -51,6 +51,7 @@ Help
 ------------
 
 [XPL DEFINE](https://github.com/M66B/XPrivacyLua/blob/master/DEFINE.md) <br>
+[XPL-EX UI Help Docs or Usage Help Docs (How to use this damn f*cking app)](https://github.com/0bbedCode/XPL-EX/blob/new/APPHELP.md) <br>
 [XPL-EX API](https://github.com/0bbedCode/XPL-EX/blob/new/APIHELP.md) <br>
 [XPL-EX Examples](https://github.com/0bbedCode/XPL-EX/blob/new/LUAHELP.md) <br>
 [Hooked Apis in XPL-EX](https://github.com/0bbedCode/XPL-EX/blob/main/HOOKED.md) <br>
