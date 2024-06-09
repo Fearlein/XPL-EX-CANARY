@@ -69,7 +69,7 @@
         <![CDATA[<br>]]><![CDATA[<a href="https://xdaforums.com/t/app-vdinfos.4097379/">XDA</a>]]>
         <![CDATA[<br>]]><![CDATA[<a href="https://github.com/VD171/VD-Infos">GitHub</a>]]>
 
-        <![CDATA[<br><br>]]> 1.4.2.4 Changes v7
+        <![CDATA[<br><br>]]> 1.4.3 Changes v8
         <![CDATA[<br><br>]]>        [All]
         <![CDATA[<br>]]>    -> Improved Text View Lines using (maxLines) remove (Lines)
         <![CDATA[<br>]]>    -> Improved Reporter Code
@@ -129,6 +129,17 @@
         <![CDATA[<br>]]>        [7] persist.sys.verizon_test_plan_imei
         <![CDATA[<br>]]>        [8] persist.sys.verizon_test_plan_iccid
         <![CDATA[<br>]]>        [9] vendor.gsm.serial
+        <![CDATA[<br>]]>    -> Added Whoami Command to Intercept
+        <![CDATA[<br>]]>    -> Added UserInfo Hooks prevent reading of Device Account Profile User Name or Info
+        <![CDATA[<br>]]>    -> Added Main UI Group Dividers
+        <![CDATA[<br>]]>    -> Added Updating Assignments Dialog (Keep things looking smooth)
+        <![CDATA[<br>]]>    -> Added Option in Settings to Export Settings to a Config!
+        <![CDATA[<br>]]>    -> Added AdStir Analytics / Ads Hooks
+        <![CDATA[<br>]]>    -> Added Amazon Analytics / Ads Hooks
+        <![CDATA[<br>]]>    -> Added UMENG Analytics / Ads Hooks
+        <![CDATA[<br>]]>    -> Added Unity Analytics / Ads Hooks
+        <![CDATA[<br>]]>    -> Added AppsFlyer Analytics / Ads Hooks
+
 
         <![CDATA[<br><br>]]> 1.4.2.3 Changes
         <![CDATA[<br><br>]]>        [Coming Soon possibly next update...]

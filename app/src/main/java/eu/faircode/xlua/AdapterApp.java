@@ -676,15 +676,11 @@ public class AdapterApp extends RecyclerView.Adapter<AdapterApp.ViewHolder> impl
     }
 
     @Override
-    public int getItemCount() {
-        return filtered.size();
-    }
+    public int getItemCount() { return filtered.size(); }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.app, parent, false));
-    }
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) { return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.app, parent, false)); }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -732,14 +728,10 @@ public class AdapterApp extends RecyclerView.Adapter<AdapterApp.ViewHolder> impl
                         : android.R.color.darker_gray, null)));
 
         holder.tvAndroid.setVisibility("android".equals(app.getPackageName()) ? View.VISIBLE : View.GONE);
-
         holder.cbForceStop.setChecked(app.getForceStop());
         holder.cbForceStop.setEnabled(!app.isPersistent());
-
         holder.adapter.set(app, selectedHooks, holder.itemView.getContext());
-
         holder.updateExpand();
-
         holder.wire();
     }
 }
