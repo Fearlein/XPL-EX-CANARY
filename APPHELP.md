@@ -160,9 +160,9 @@ Installation
 -----
 If you are installing new XPLEX over old you do not need to uninstall old, install the new one, select it in LSPOSED and RE-Select "Settings Storage" in LSPOSED Under "XPLEX" then Reboot.(Always reboot for new XPLEX installation).<br>
 If you installing over XPrivacyLua Original, Uninstall original Install XPLEX as we do not share the same signature for signing. You data will not be lost.<br>
-You data will never be lost as the Data for XPLEX is stored in a database in the Root System Folder "/data/system/" under a Folder starting with the name of "xplex-xxxxx" (xxxx being a random string). Deleting that Folder will delete your XPLEX settings, logs, assigned Hooks etc (essentially resets XPLEX as if you never used it before its your first time).<br>
+Your data will never be lost as the Data for XPLEX is stored in a database in the Root System Folder "/data/system/" under a Folder starting with the name of "xplex-xxxxx" (xxxx being a random string). Deleting that Folder will delete your XPLEX settings, logs, assigned Hooks etc (essentially resets XPLEX as if you never used it before its your first time).<br>
 So clearing app data on XPLEX will do nothing except for clear minor non important settings, that only affect the UI of XPLEX (nothing important I promise). <br>
-If its your first time (or you cleared XPLEX Data) on the XPLEX Version (1.4.3) It will disable the original "XPrivacyLua" Collection "Privacy" since the "Privacy" Collection is depricated no longer used, use "PrivacyEx" Collection.<br>
+If its your first time (or you cleared XPLEX Data) on the XPLEX Version (1.4.3) It will disable the original "XPrivacyLua" Collection "Privacy" since the "Privacy" Collection is deprecated no longer used, use "PrivacyEx" Collection.<br>
 To Control the Collections you can configure them in the XPrivacyLua Pro app, you can find the free APK in the Telegram channel as a Pin or in Announcements.<br>
 
 <br><br>
@@ -171,4 +171,4 @@ To Control the Collections you can configure them in the XPrivacyLua Pro app, yo
 LSPOSED
 -----
 Why when I check "Settings Storage" in LSPOSED under "XPLEX" it Un-Checks ? <br>
-That's fine, as long as you SELECTED IT ONCE and REBOOTED THAT ONE TIME. If you are not sure Select it again Reboot keep that in memory you selected it so you dont have to again.<br>
+That's fine, as long as you SELECTED IT ONCE and REBOOTED THAT ONE TIME. If you are not sure Select it again Reboot keep that in memory you selected it so you don't have to again.<br>
