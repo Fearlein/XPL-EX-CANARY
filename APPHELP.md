@@ -1,3 +1,4 @@
+
 Basics
 -----
 
@@ -172,3 +173,88 @@ LSPOSED
 -----
 Why when I check "Settings Storage" in LSPOSED under "XPLEX" it Un-Checks ? <br>
 That's fine, as long as you SELECTED IT ONCE and REBOOTED THAT ONE TIME. If you are not sure Select it again Reboot keep that in memory you selected it so you don't have to again.<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br><br><br><br><br><br><br>New Write up<br>
+# How can I use this Damn F*cking App
+<br><br>
+## Issues with Simplicity
+Due to the Complex nature of the Application (it allowing for Dynamic Defination of Hooks, ability to have 90% Control over Hooks and its Behviour) it makes it difficult to "make the application more simple". Also due to its size of elements it contributes to the difficult in "making it simpule".<br>
+Applications such as "Android Spoofer", "PMP", and "Android Faker" can do these things since there goal in mind is to make a application with Static Hook Definations. Now sure XPLEX provides out the box ALOT of Hooks most you will ever need, but you are the User can Create your Own Hooks, define the Hook behaviour so simply trying to group all of this is a challenge. When XPLEX is Compiled the Hook Scripts and Hooks are never set in stone complete. They can be modifed by, updated by you, removed by you, or you can add more hooks, trying to "group" this chaos, or have a "magic" button one click all solution would lock more things in leaving the ned user with less options to custimize to their hearts content.<br>
+Simply put it, your comparing a Kitchen Knife to a Sword (Excalibur), if you want a Kitchen Knife, use the "Competitors/Alternatives". Ontop of that wonderful thing about XPLEX is it used Native Adnroid UI, Supports Androud 6.0+, Is 100% Free, Hooks can be Customized, Supports (most) APIs that can retrive Device Information, AD and Anlytic Free, Fully works Offline (No Server it ever connects too), and supports virtual Environment such as "ThaiChi" and "VirtualXposed".<br>For a final Note for those who as me to make modifcations to the Pro Companion app (Free Download can be found in the Telegram) I cannot as I do not have access or source code to that application. Future of XPLEX will merge all the Pro Features into one app still free.<br><br>
+So instead of Dumbifying it, we will create a Guide that will help you navigate this maze!<br><br>
+
+## Context (Global vs Application)
+So each Hook or (most) Hooks can have an assigned setting for it value usage. Exmaple the "IMEI" Hook(s) that Spoofs the Device "IMEI" would obvioulsy grab the Fake "IMEI" value from the XLUA Settings Database. If the user Modifed the Settings for those Hook(s) under the Context of the Application then it will direct its values from those assignments. Now if you didnt set the settings under the Context of the Application but under the "Global" (all) Context, then the Target Apps will grab its needed setting values for it assigned hooks from (Global) IF the values are not assigned to settings under the Context of the Application. So think of it as "Defaults" for when Values are not Assigned. This is the best option to replicate Default values as newest versions of XPLEX does not support Default Values (for now) when the Values needed are not assigned. On the contrary you can still use 'default' values if its available in the specifc app settings as a check but this would be less affective especially when the setting / hook dosnt have a 'default' value.<br>
+- **Global Context:** Controls all apps. (If the specific app does not have assigned settings for that specific hook)
+- **App Context:** Controls a specific app.<br>
+You can typically access Global settings or any Global UI by selecting the Buttons on the side slide menu of the XPLEX Main UI, you can access App Specific Context Menus within the Buttons under the Applications within XPLEX Main UI.<br>
+<details>
+  <summary>Global Context</summary>
+
+![Screenshot_20240610-223252_XPL-EX](https://github.com/0bbedCode/XPL-EX/assets/114315756/1e4b7a76-f343-463a-9a43-ab02f0dc522d)
+</details>
+<details>
+  <summary>Application Context</summary>
+
+![Screenshot_20240610-223234_XPL-EX](https://github.com/0bbedCode/XPL-EX/assets/114315756/ca9ab95d-c881-4b72-8657-22bcbed33e73)
+</details>
+
+<br><br>
+## Main UI
+<br>
+<details>
+  <summary>Application View</summary>
+
+![Screenshot_20240610-225035_XPL-EX2](https://github.com/0bbedCode/XPL-EX/assets/114315756/b667b1f0-a6b3-43e9-80d7-f3db008e2b6a)
+</details>
+
+<br>
+
+- **1:**  Pro Campanion App Settings (Links Access to the Original Pro Application)
+- **2:** Check to Enable all the Hooks (If its your first time enabling the hook or using the app, select each Group you want first so you can read the warnings)
+- **3:** Enable the Application to be Killed when you are modifiing the Hook Assignments
+- **4:** ***Hook Control UI***, under the Context of the Target Application
+- **5:** ***Config Control UI***, under the Context of the Target Application
+- **6:** ***Settings Control UI***, under the Context of the Target Application
+- **7:** ***Properties Control UI***, under the Context of the Target Application
+- **8:** Hook Groups, Hook Grouped in sub categories made avaible to select<br><br>
+Selecting the Drawer Menu on the Side will open those UI's Under the Context of "Global"<br><br>
+
+## Settings Embed
+You will notice as the more you use this application, alot of things are just advance setting wrappers. Most of the system is controllbed by via settings there for you will see such as Properties UI, Settings UI, Config UI what not, it wil integrate some sort of setting control view or view(s). To understand the layout first here is a View of what it would look like:<br>
+<details>
+  <summary>Setting Control View</summary>
+
+![Screenshot_20240610-231738_XPL-EX2](https://github.com/0bbedCode/XPL-EX/assets/114315756/8133c305-9669-4de1-8281-660c6f06f22d)
+</details>
+
+
+- **1:**  Input for the Custom Value
+- **2:**  ***Randomizer***, this will be auto selected no need to change it, if it has no randomizer the text will be "N/A (No Randomizer)" and if the Randomizer is a Static Element Randomizer it will just say "N/A" meaning nothing is selected but select the drop down to see the options.
+- **3:** ***Delete***,  Delete the setting and or the Map or both. The map is the Default value and or Description (Gives personality to the setting), note setting names should never have actual spaces but XPLEX system converts "." (Periods) into Spaces within the UI for better user Viewing.
+- **4:** ***Save***, Save the Modified Value into the XPLEX Settings Database override the last saved value
+- **5:** ***Reset***, Reset the (Unsaved) Modifed Value back to the last Saved Value
+- **6:** ***Randomize***, Use the current Selected Randomizer to generate a Random Value into the Input. This will be Un-Saved there for can be Resetted, you can save it if you are satisfied.<br><br>
+
+## Settings UI
+Skipping over the common Embed, we will focus on the Floating Action Button Menu options and the Floating App Island with the Drop Down options.<br><br> 
