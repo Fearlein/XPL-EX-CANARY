@@ -61,7 +61,34 @@ You will notice as the more you use this application, a lot of things are just a
 - **5:** ***Reset***, Reset the (Unsaved) Modified Value back to the last Saved Value
 - **6:** ***Randomize***, Use the current Selected Randomizer to generate a Random Value into the Input. This will be Un-Saved there for can be Retested, you can save it if you are satisfied.<br>
 
-***Easter Egg***, Knowing the Setting you are working work does not have "N/A (No Randomizer)" for its Default Randomizer and also it dosnt just say "N/A" as one means no Randomizer other Means no option selected since it has a hardcoded option selection. If those two things check out (basically put it easy the randomizer dosnt have "N/A" in it) then you can set the value of the Randomizer to "***%random%***" (No Qutoes), doing that will make it so each time you open up your target app, and needs that setting value it will Randomize that value for you. Once you close that app re open it, it will have a new Randomized value, Randomizes each time you closed and opened the app. Once again this will only work if the setting has a Randomizer by Default, and also that the Randomizer isnt a Hardcoded Option based one (again to make it easy if the randomizer name dosnt contain "N/A" then you can use this ***Easter Egg***).<br><br>
+***Easter Egg***, Knowing the Setting you are working work does not have "N/A (No Randomizer)" for its Default Randomizer and also it dosnt just say "N/A" as one means no Randomizer other Means no option selected since it has a hardcoded option selection. If those two things check out (basically put it easy the randomizer dosnt have "N/A" in it) then you can set the value of the Randomizer to "***%random%***" (No Qutoes), doing that will make it so each time you open up your target app, and needs that setting value it will Randomize that value for you. Once you close that app re open it, it will have a new Randomized value, Randomizes each time you closed and opened the app. Once again this will only work if the setting has a Randomizer by Default, and also that the Randomizer isnt a Hardcoded Option based one (again to make it easy if the randomizer name dosnt contain "N/A" then you can use this ***Easter Egg***).<br>
+
+<details>
+  <summary>Exmaple of Easter Egg</summary>
+  
+![Screenshot_20240612-072718_SystemUI](https://github.com/0bbedCode/XPL-EX/assets/114315756/9303e689-9f6d-48a8-b8eb-36254b115738)
+</details>
+<br>
+
+<details>
+  <summary>Exmaple of Good Randomizer (Donst contain N/A)</summary>
+  
+![Screenshot_20240612-072729_XPL-EX](https://github.com/0bbedCode/XPL-EX/assets/114315756/769ba56e-1195-46f6-9298-78b2574ca3ae)
+</details>
+
+<details>
+  <summary>Exmaple a Option Based Randomizer</summary>
+  
+![Screenshot_20240612-072747_XPL-EX](https://github.com/0bbedCode/XPL-EX/assets/114315756/23bf2a58-c7ab-43e0-af65-859901a76b20)
+</details>
+
+<details>
+  <summary>Exmaple of NO Randomizer/ Dosnt have one</summary>
+  
+![Screenshot_20240612-072803_XPL-EX](https://github.com/0bbedCode/XPL-EX/assets/114315756/a8fb50b6-b512-4da1-8847-8cc62b611a70)
+</details>
+
+<br><br>
 
 ## Settings UI
 Skipping over the common Embed, we will focus on the Floating Action Button Menu options and the Floating App Island with the Drop Down options. For starters here is a ***Easter Egg***, by checking ONE setting in the group, THEN holding down on that ONE check box that you checked, it will then check all the other check boxes in that group. If you uncheck ONE check box in that group then hold down on that ONE unchecked box in that group, it will un check all the check boxes in that group. This will be useful for mass checking / selection.<br>
