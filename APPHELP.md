@@ -112,8 +112,8 @@ Before starting this to enable the power of Properties Interception select "***I
 - **1:** ***Add***, Add a new Property, this would bind it to the group you have clicked under so you do not need to fill in the group name just fill in the property name
 - **2:** ***Hide***, Hide the Property if it exists
 - **3:** ***Skip***, Ignore the property if it exists, not intercept and replace its value just skip / ignore it.
-- **4:** ***Force***, Mainly used if the property does not exist, if it does not exist force it into view as if it does exist<br><br>
-- **5:** ***Delete***, Delete the Property from that Group
+- **4:** ***Force***, Mainly used if the property does not exist, if it does not exist force it into view as if it does exist
+- **5:** ***Delete***, Delete the Property from that Group<br>
 
 ### Properties System Overview
 
